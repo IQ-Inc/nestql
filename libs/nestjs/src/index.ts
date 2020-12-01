@@ -10,8 +10,8 @@ export class NestQLNestModule {
   }
 }
 
-export type INestCommunication<T extends IOperations> = {
-  [K in keyof T]: T[K] extends IOperation<infer T, infer Props> ? ServerOperation<T, Props> : never;
+export type INestCommunication<O extends IOperations> = {
+  [K in keyof O]: O[K] extends IOperation<infer T, infer Props> ? ServerOperation<T, Props> : never;
 };
 
 export * from './lib/decorators';

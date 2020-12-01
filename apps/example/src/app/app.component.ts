@@ -8,7 +8,12 @@ import { switchMap, tap } from 'rxjs/operators';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  hello$ = this.api.getAllJobs([{ id: true, datePosted: true }]);
+  hello$ = this.api.getAllJobs([
+    {
+      id: true,
+      datePosted: true,
+    },
+  ]);
 
   constructor(private readonly api: ApiFacadeService) {
     // this.hello$.subscribe((s) => s.ownedBy);
@@ -24,12 +29,20 @@ export class AppComponent {
             {
               name: `rand_${Math.random()}`,
               datePosted: new Date(),
-              jobTitle: 'sdd',
+              jobTitle: '',
               ownedBy: user,
             }
           )
         ),
-        tap(() => (this.hello$ = this.api.getAllJobs([{ id: true, datePosted: true }])))
+        tap(
+          () =>
+            (this.hello$ = this.api.getAllJobs([
+              {
+                id: true,
+                datePosted: true,
+              },
+            ]))
+        )
       )
       .subscribe();
   }

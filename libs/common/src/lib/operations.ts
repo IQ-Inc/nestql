@@ -10,11 +10,11 @@ export interface IOperation<T, Props = undefined> {
 
 export type IOperations = Record<keyof unknown, IOperation<unknown, unknown>>;
 
-export type ServerOperation<T, Props = undefined> = <Q extends Query<T>>(
+export type ServerOperation<T, Props = undefined> = (
   request: IOperation<T, Props>
-) => PromiseOrObservable<Parser<T, Q>>;
+) => PromiseOrObservable<Parser<T, Query<T>>>;
 
-export type ClientOperation<T, Props = undefined> = <Q extends Query<T>>(
-  query: Q,
+export type ClientOperation<T, Props = undefined> = (
+  query: Query<T>,
   props?: Props
-) => Observable<Parser<T, Q>>;
+) => Observable<Parser<T, Query<T>>>;

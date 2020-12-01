@@ -9,7 +9,7 @@
       "request": "attach",
       "protocol": "inspector",
       "name": "API",
-      "port": 2323,
+      "port": 2324,
       "address": "localhost",
       "sourceMaps": true,
       "trace": true,

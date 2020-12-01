@@ -1,13 +1,32 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Message } from '@nestql/api-interfaces';
+import { ApiFacadeService } from './api.facade';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'nestql-root',
+  selector: 'nestql-example-app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  hello$ = this.http.get<Message>('/api/hello');
-  constructor(private http: HttpClient) {}
+  hello$ = this.api.getAllJobs([{ id: true }]);
+
+  constructor(private readonly api: ApiFacadeService) {
+    // this.hello$.subscribe((s) => s.ownedBy);
+  }
+
+  createJob() {
+    this.api.getUser({ __all: true }, { id: '1' }).pipe(
+      switchMap((user) =>
+        this.api.addJobPost(
+          { id: true },
+          {
+            name: 'rando' + Math.random,
+            datePosted: new Date(),
+            jobTitle: 'sdd',
+            ownedBy: user,
+          }
+        )
+      )
+    );
+  }
 }

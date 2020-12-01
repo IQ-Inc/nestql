@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.tabSize": 2
+  },
+  "editor.rulers": [
+    110
+  ],
+  "cSpell.words": [
+    "Typeorm",
+    "dtos",
+    "nestjs",
+    "nestql",
+    "upsert"
+  ]
+}

@@ -1,15 +1,31 @@
-import { Controller, Get } from '@nestjs/common';
+import { IOperation } from '@nestql/common';
+import { AddJobPostDto, ExampleAppOperations, GetJobPostDto, JobPost, User } from '@nestql/example';
+import { INestCommunication, Operation, Payload, Resolver } from '@nestql/nestjs';
+import * as uuid from 'uuid';
+import { JobPostRepository } from './repositories/job-post.repository';
+import { UserRepository } from './repositories/user.repository';
 
-import { Message } from '@nestql/api-interfaces';
+@Resolver()
+export class AppController implements INestCommunication<ExampleAppOperations> {
+  constructor(private readonly jobPostRepo: JobPostRepository, private readonly userRepo: UserRepository) {}
 
-import { AppService } from './app.service';
+  @Operation()
+  async getJobPost(@Payload() { props, query }: IOperation<JobPost, GetJobPostDto>) {
+    return this.jobPostRepo.findOne(props.id, query);
+  }
 
-@Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+  @Operation()
+  async addJobPost(@Payload() { props, query }: IOperation<JobPost, AddJobPostDto>) {
+    return this.jobPostRepo.upsert({ ...props, id: uuid.v4() }, query);
+  }
 
-  @Get('hello')
-  getData(): Message {
-    return this.appService.getData();
+  @Operation()
+  async getUser(@Payload() { props, query }: IOperation<User, { id: string }>) {
+    return this.userRepo.findOneOrFail(props.id, query);
+  }
+
+  @Operation()
+  async getAllJobs(@Payload() { query }: IOperation<JobPost[]>) {
+    return this.userRepo.findAll(query);
   }
 }

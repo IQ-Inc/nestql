@@ -20,39 +20,20 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nestql/api-interfaces": [
-        "libs/api-interfaces/src/index.ts"
-      ],
-      "@nestql/common": [
-        "libs/common/src/index.ts"
-      ],
-      "@nestql/util": [
-        "libs/util/src/index.ts"
-      ],
-      "@nestql/angular": [
-        "libs/angular/src/index.ts"
-      ],
-      "@nestql/nestjs": [
-        "libs/nestjs/src/index.ts"
-      ],
-      "@nestql/example-domain": [
-        "libs/example-domain/src/index.ts"
-      ]
+      "@nestql/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@nestql/common": ["libs/common/src/index.ts"],
+      "@nestql/util": ["libs/util/src/index.ts"],
+      "@nestql/angular": ["libs/angular/src/index.ts"],
+      "@nestql/nestjs": ["libs/nestjs/src/index.ts"],
+      "@nestql/example-domain": ["libs/example-domain/src/index.ts"],
+      "@nestql/typeorm": ["libs/typeorm/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

@@ -53,6 +53,9 @@
     },
     "example-domain": {
       "tags": []
+    },
+    "typeorm": {
+      "tags": []
     }
   }
 }

@@ -15,4 +15,3 @@ export type INestCommunication<T extends IOperations> = {
 };
 
 export * from './lib/decorators';
-export * from './lib/repository';

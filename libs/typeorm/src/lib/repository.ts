@@ -5,7 +5,7 @@ import { DeepPartial, Repository, SelectQueryBuilder } from 'typeorm';
 /**
  * TODO
  */
-export abstract class IRepository<Entity extends IDomainModel<{ id: string | number }, object>> {
+export abstract class NestQLTypeormRepository<Entity extends IDomainModel<{ id: string | number }, object>> {
   constructor(protected readonly repo: Repository<Entity>) {}
 
   async findOneOrFail<Q extends Query<Entity>>(id: string | number, query: Q) {

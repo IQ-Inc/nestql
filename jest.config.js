@@ -9,5 +9,6 @@ module.exports = {
     '<rootDir>/libs/nestjs',
     '<rootDir>/libs/example',
     '<rootDir>/libs/example-domain',
+    '<rootDir>/libs/typeorm',
   ],
 };

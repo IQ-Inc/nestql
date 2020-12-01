@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NestQLNestModule } from '@nestql/nestjs';
 import { AppController } from './app.controller';
 import { DbModule } from './db.module';
 import { UserPrivateEntity } from './entities/user-private.entity';
+import { LogInterceptor } from './log.interceptor';
 import { JobPostRepository } from './repositories/job-post.repository';
 import { UserRepository } from './repositories/user.repository';
 
@@ -24,6 +26,11 @@ import { UserRepository } from './repositories/user.repository';
     DbModule,
   ],
   controllers: [AppController],
-  providers: [UserRepository, UserPrivateEntity, JobPostRepository],
+  providers: [
+    UserRepository,
+    UserPrivateEntity,
+    JobPostRepository,
+    { provide: APP_INTERCEPTOR, useClass: LogInterceptor },
+  ],
 })
 export class AppModule {}

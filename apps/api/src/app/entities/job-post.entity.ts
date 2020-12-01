@@ -1,4 +1,4 @@
-import { JobPost, User } from '@nestql/example';
+import { JobPost, User } from '@nestql/example-domain';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 

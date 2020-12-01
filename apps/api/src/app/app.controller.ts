@@ -1,5 +1,5 @@
 import { IOperation } from '@nestql/common';
-import { AddJobPostDto, ExampleAppOperations, GetJobPostDto, JobPost, User } from '@nestql/example';
+import { ExampleAppOperations, JobPost, GetJobPostDto, AddJobPostDto, User } from '@nestql/example-domain';
 import { INestCommunication, Operation, Payload, Resolver } from '@nestql/nestjs';
 import * as uuid from 'uuid';
 import { JobPostRepository } from './repositories/job-post.repository';
@@ -26,6 +26,6 @@ export class AppController implements INestCommunication<ExampleAppOperations> {
 
   @Operation()
   async getAllJobs(@Payload() { query }: IOperation<JobPost[]>) {
-    return this.userRepo.findAll(query);
+    return this.jobPostRepo.findAll(query);
   }
 }

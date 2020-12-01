@@ -8,5 +8,6 @@ module.exports = {
     '<rootDir>/libs/angular',
     '<rootDir>/libs/nestjs',
     '<rootDir>/libs/example',
+    '<rootDir>/libs/example-domain',
   ],
 };

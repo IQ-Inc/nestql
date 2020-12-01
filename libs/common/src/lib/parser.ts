@@ -12,7 +12,7 @@ export type Parser<CompleteType, QueriedType> = DecayNever<
         : QueriedType[K] extends true
         ? CompleteType[K]
         : never
-      : QueriedType extends { [NESTQL_ALL]: true }
+      : QueriedType extends { __all: true }
       ? CompleteType[K]
       : never;
   }

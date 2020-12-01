@@ -1,4 +1,4 @@
-import { UserPrivate } from '@nestql/example';
+import { UserPrivate } from '@nestql/example-domain';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 

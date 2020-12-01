@@ -46,8 +46,8 @@
       "@nestql/nestjs": [
         "libs/nestjs/src/index.ts"
       ],
-      "@nestql/example": [
-        "libs/example/src/index.ts"
+      "@nestql/example-domain": [
+        "libs/example-domain/src/index.ts"
       ]
     }
   },

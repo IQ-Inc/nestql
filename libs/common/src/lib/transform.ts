@@ -30,6 +30,7 @@ export function removeExtraFields<T, Q extends Query<T>>(fullEntity: T | T[], qu
 
   if (Array.isArray(fullEntity)) {
     fullEntity.map((e) => remove(e));
+    fullEntity = fullEntity.filter((e) => Object.entries(e).length > 0);
   } else {
     fullEntity = remove(fullEntity);
   }
@@ -67,10 +68,13 @@ export function createTypeormRelationsArray<T>(query: Query<T>) {
   const parse = (q: Query<T>) => {
     iter++;
     for (const k in q) {
-      if (typeof q[k] === 'object') {
-        concat(k, iter);
-        parse((q[k] as unknown) as Query<T>);
-        iter--;
+      if (q.hasOwnProperty(k)) {
+        const qk = q[k] as any;
+        if (typeof qk === 'object') {
+          concat(k, iter);
+          parse((q[k] as any) as Query<T>);
+          iter--;
+        }
       }
     }
   };

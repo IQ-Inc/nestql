@@ -50,6 +50,9 @@
     },
     "nestjs": {
       "tags": []
+    },
+    "example-domain": {
+      "tags": []
     }
   }
 }

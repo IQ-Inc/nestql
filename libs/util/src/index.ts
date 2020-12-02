@@ -21,3 +21,11 @@ type DecayNeverType<T> = { [K in keyof T]: DecayNever<T[K]> };
 type FilteredKeys<T> = {
   [K in keyof T]: T[K] extends never ? never : K;
 }[keyof T];
+
+export type RecursivePartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? RecursivePartial<U>[]
+    : T[P] extends object
+    ? RecursivePartial<T[P]>
+    : T[P];
+};

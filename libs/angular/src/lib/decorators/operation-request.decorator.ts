@@ -1,6 +1,6 @@
 import { __NESTQL_OPERATIONS, __NESTQL_OPERATIONS_PLACEHOLDER } from '@nestql/common';
 
-export function OperationRequest(): PropertyDecorator {
+export function ClientOperation(): PropertyDecorator {
   return function (target: any, propertyKey: string | symbol) {
     const operations = target[__NESTQL_OPERATIONS];
     if (!operations) {

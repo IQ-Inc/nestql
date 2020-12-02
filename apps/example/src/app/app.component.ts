@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
 import { ApiFacadeService } from './api.facade';
-import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'nestql-example-app-root',
@@ -10,15 +10,13 @@ import { switchMap, tap } from 'rxjs/operators';
 export class AppComponent {
   hello$ = this.api.getAllJobs([
     {
-      __all: true,
-      ownedBy: {
-        __all: true,
-      },
+      id: true,
+      jobTitle: true,
     },
   ]);
 
   constructor(private readonly api: ApiFacadeService) {
-    // this.hello$.subscribe((s) => s.ownedBy);
+    // this.hello$.subscribe((s) => s[0].jobTitle);
   }
 
   createJob() {
@@ -35,15 +33,6 @@ export class AppComponent {
               ownedBy: user,
             }
           )
-        ),
-        tap(
-          () =>
-            (this.hello$ = this.api.getAllJobs([
-              {
-                id: true,
-                datePosted: true,
-              },
-            ]))
         )
       )
       .subscribe();

@@ -1,1 +1,1 @@
-export * from './lib/repository';
+export * from './lib/nestql-typeorm.repository';

@@ -1,23 +1,32 @@
-import { createTypeormRelationsArray, IDomainModel, Parser, Query, removeExtraFields } from '@nestql/common';
+import {
+  createTypeormRelationsArray,
+  IDomainModel,
+  IParser,
+  IQuery,
+  removeExtraFields,
+} from '@nestql/common';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { DeepPartial, Repository, SelectQueryBuilder } from 'typeorm';
 
 /**
  * TODO
  */
-export abstract class NestQLTypeormRepository<Entity extends IDomainModel<{ id: string | number }, object>> {
+export abstract class NestQLTypeormRepository<
+  Entity extends IDomainModel<{ id: IDType }, object>,
+  IDType extends string | number = string
+> {
   constructor(protected readonly repo: Repository<Entity>) {}
 
-  async findOneOrFail<Q extends Query<Entity>>(id: string | number, query: Q) {
+  async findOneOrFail<Q extends IQuery<Entity>>(id: string | number, query: Q) {
     const relations = createTypeormRelationsArray<Entity>(query);
     const e = await this.repo.findOneOrFail(id, { relations });
-    return removeExtraFields(e, query) as Parser<Entity, Q>;
+    return removeExtraFields(e, query) as IParser<Entity, Q>;
   }
 
-  async findOne<Q extends Query<Entity>>(id: string | number, query: Q) {
+  async findOne<Q extends IQuery<Entity>>(id: string | number, query: Q) {
     const relations = createTypeormRelationsArray<Entity>(query);
     const e = await this.repo.findOne(id, { relations });
-    return removeExtraFields(e, query) as Parser<Entity, Q>;
+    return removeExtraFields(e, query) as IParser<Entity, Q>;
   }
 
   // async findMany<Q extends Query<Entity>>(ids: Array<string | number>, q: Q) {
@@ -25,10 +34,10 @@ export abstract class NestQLTypeormRepository<Entity extends IDomainModel<{ id: 
   //   return this.query((alias, qb) => qb.where(`${alias}.id IN(:...ids)`, { ids }), relations);
   // }
 
-  async findAll<Q extends Query<Entity>>(query: Q) {
+  async findAll<Q extends IQuery<Entity>>(query: Q) {
     const relations = createTypeormRelationsArray<Entity>(query);
     const e = await this.repo.find({ relations });
-    return removeExtraFields(e, query) as Parser<Entity, Q>;
+    return removeExtraFields(e, query) as IParser<Entity, Q>;
   }
 
   //   paginate<RK extends RKeys = never>(
@@ -74,7 +83,7 @@ export abstract class NestQLTypeormRepository<Entity extends IDomainModel<{ id: 
   //     return qb.getMany();
   //   }
 
-  async upsert<Q extends Query<Entity>>(entity: Entity, query: Q) {
+  async upsert<Q extends IQuery<Entity>>(entity: Entity, query: Q) {
     await this.repo.save(entity);
     return this.findOneOrFail(entity.id, query);
   }

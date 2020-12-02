@@ -1,21 +1,23 @@
 import { PromiseOrObservable } from '@nestql/util';
 import { Observable } from 'rxjs';
-import { Parser } from './parser';
-import { Query } from './query';
+import { NESTQL_PROPS, NESTQL_QUERY } from './constants';
+import { IParser } from './parser';
+import { IQuery } from './query';
+import { RecursivePartial } from '@nestql/util';
 
 export interface IOperation<T, Props = undefined> {
-  query: Query<T>;
-  props: Props;
+  [NESTQL_QUERY]: IQuery<T>;
+  [NESTQL_PROPS]: Props;
 }
 
 export type IOperations = Record<keyof unknown, IOperation<unknown, unknown>>;
 
-export type ServerOperation<T, Props = undefined> = (
-  query: Query<T>,
+export type IServerOperation<T, Props = undefined> = (
+  query: IQuery<T>,
   props: Props
-) => PromiseOrObservable<Parser<T, Query<T>>>;
+) => PromiseOrObservable<IParser<T, IQuery<T>>>;
 
-export type ClientOperation<T, Props = undefined> = (
-  query: Query<T>,
+export type IClientOperation<T, Props = undefined> = <Q extends IQuery<T>>(
+  query: RecursivePartial<Q>,
   props?: Props
-) => Observable<Parser<T, Query<T>>>;
+) => Observable<IParser<T, Q>>;

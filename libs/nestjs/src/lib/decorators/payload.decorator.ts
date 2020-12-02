@@ -1,14 +1,15 @@
 import { Body } from '@nestjs/common';
+import { NESTQL_PROPS, NESTQL_QUERY } from '@nestql/common';
 import { ValidationPipe } from '../pipes/validation.pipe';
 
-export function QueryPayload(): ParameterDecorator {
+export function Query(): ParameterDecorator {
   return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
-    Body('query')(target, propertyKey, parameterIndex);
+    Body(NESTQL_QUERY)(target, propertyKey, parameterIndex);
   };
 }
 
-export function PropsPayload(): ParameterDecorator {
+export function Props(): ParameterDecorator {
   return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
-    Body('props', new ValidationPipe())(target, propertyKey, parameterIndex);
+    Body(NESTQL_PROPS, new ValidationPipe())(target, propertyKey, parameterIndex);
   };
 }

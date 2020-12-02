@@ -1,8 +1,8 @@
 import { NESTQL_ALL } from './constants';
-import { Parser } from './parser';
-import { Query } from './query';
+import { IParser } from './parser';
+import { IQuery } from './query';
 
-export function removeExtraFields<T, Q extends Query<T>>(fullEntity: T | T[], query: Q) {
+export function removeExtraFields<T, Q extends IQuery<T>>(fullEntity: T | T[], query: Q) {
   if (!fullEntity || !query) return;
 
   if (Array.isArray(query)) {
@@ -35,10 +35,10 @@ export function removeExtraFields<T, Q extends Query<T>>(fullEntity: T | T[], qu
     fullEntity = remove(fullEntity);
   }
 
-  return fullEntity as Parser<T, Q>;
+  return fullEntity as IParser<T, Q>;
 }
 
-export function createTypeormRelationsArray<T>(query: Query<T>) {
+export function createTypeormRelationsArray<T>(query: IQuery<T>) {
   if (Array.isArray(query)) {
     query = query[0];
   }
@@ -65,14 +65,14 @@ export function createTypeormRelationsArray<T>(query: Query<T>) {
   };
 
   let iter = 0;
-  const parse = (q: Query<T>) => {
+  const parse = (q: IQuery<T>) => {
     iter++;
     for (const k in q) {
       if (q.hasOwnProperty(k)) {
         const qk = q[k] as any;
         if (typeof qk === 'object') {
           concat(k, iter);
-          parse((q[k] as any) as Query<T>);
+          parse((q[k] as any) as IQuery<T>);
           iter--;
         }
       }

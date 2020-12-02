@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpXhrBackend } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { IOperation, IOperations, __NESTQL_OPERATIONS } from '@nestql/common';
+import { IOperation, IOperations, NESTQL_PROPS, NESTQL_QUERY, __NESTQL_OPERATIONS } from '@nestql/common';
 import 'reflect-metadata';
 
 @NgModule({
@@ -31,11 +31,11 @@ function createOperations(apiUrl: string, operations: IOperations) {
   const http = new HttpClient(new HttpXhrBackend({ build: () => new XMLHttpRequest() }));
   const o = (operations as any).prototype[__NESTQL_OPERATIONS];
   for (const k of Object.keys(o)) {
-    const clientOperation = (query: object, props: object) => {
-      const body: IOperation<object, object> = { props, query };
+    const IClientOperation = (query: object, props: object) => {
+      const body: IOperation<object, object> = { [NESTQL_PROPS]: props, [NESTQL_QUERY]: query };
       return http.post<any>(`${apiUrl}/nestql/${k}`, body);
     };
-    o[k] = clientOperation;
+    o[k] = IClientOperation;
   }
   return o;
 }

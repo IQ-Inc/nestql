@@ -1,6 +1,6 @@
-import { RecursivePartial } from '@nestql/util';
-import { NESTQL_ALL_FIELDS, NESTQL_LIMIT, NESTQL_PAGE, NESTQL_PAGINATE } from './constants';
+import { NESTQL_LIMIT, NESTQL_PAGE, NESTQL_PAGINATE } from './constants';
 import { IDomainModel } from './domain-model';
+import { IParser } from './parser';
 
 export type IQuery<Q> = Q extends Array<infer TA>
   ? IArrayQuery<Q, TA>
@@ -42,5 +42,3 @@ type IProhibitAdjacentReferencedRelations<Q, Relations> = {
     ? never
     : K;
 }[keyof Relations];
-
-export const createQueryModel = <T>() => <Q extends IQuery<T>>(q: Q) => q;

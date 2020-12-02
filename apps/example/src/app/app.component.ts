@@ -1,24 +1,8 @@
 import { Component } from '@angular/core';
 import { createQueryModel } from '@nestql/common';
-import { JobPost, User } from '@nestql/example-domain';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { ApiFacadeService } from './api.facade';
-
-const TJobPost = createQueryModel<JobPost[]>()([
-  {
-    id: true,
-    ownedBy: {
-      id: true,
-      firstName: true,
-    },
-    __paginate: 'all',
-  },
-]);
-
-interface State {
-  user: typeof TJobPost;
-}
+import { JobPost } from '@nestql/example-domain';
+import { JobPostQuery } from './state/job-post.query';
+import { JobPostService } from './state/job-post.service';
 
 @Component({
   selector: 'nestql-example-app-root',
@@ -26,10 +10,12 @@ interface State {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  hello$ = this.api.getAllJobs(TJobPost);
+  hello$ = this.jobPostQuery.selectAll();
 
-  constructor(private readonly api: ApiFacadeService) {
-    this.hello$.subscribe((s) => s[0]);
+  constructor(private readonly jobPostService: JobPostService, private readonly jobPostQuery: JobPostQuery) {}
+
+  getJobPosts() {
+    this.jobPostService.getAllJobPosts().subscribe();
   }
 
   createJob() {

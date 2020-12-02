@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { NESTQL_PROPS, NESTQL_QUERY } from './constants';
 import { IParser } from './parser';
 import { IQuery } from './query';
-import { RecursivePartial } from '@nestql/util';
 
 export interface IOperation<T, Props = undefined> {
   [NESTQL_QUERY]: IQuery<T>;
@@ -18,6 +17,6 @@ export type IServerOperation<T, Props = undefined> = (
 ) => PromiseOrObservable<IParser<T, IQuery<T>>>;
 
 export type IClientOperation<T, Props = undefined> = <Q extends IQuery<T>>(
-  query: RecursivePartial<Q>,
+  query: Q,
   props?: Props
 ) => Observable<IParser<T, Q>>;

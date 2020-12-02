@@ -1,5 +1,5 @@
 import { RecursivePartial } from '@nestql/util';
-import { NESTQL_ALL, NESTQL_LIMIT, NESTQL_PAGE, NESTQL_PAGINATE } from './constants';
+import { NESTQL_ALL_FIELDS, NESTQL_LIMIT, NESTQL_PAGE, NESTQL_PAGINATE } from './constants';
 import { IDomainModel } from './domain-model';
 
 export type IQuery<Q> = Q extends Array<infer TA>
@@ -8,26 +8,26 @@ export type IQuery<Q> = Q extends Array<infer TA>
   ? IPropQuery<Props> & IDiscernArrayFromObjectRelationQuery<Q, Relations>
   : never;
 
-type IPropQuery<Props> =
-  | {
-      [K in keyof Props]: true;
-    }
-  | { __all: true };
+type IPropQuery<Props> = {
+  [K in keyof Props]?: true;
+};
 
 type IDiscernArrayFromObjectRelationQuery<Q, Relations> = {
-  [K in keyof Relations]: Relations[K] extends Array<infer RA>
+  [K in keyof Relations]?: Relations[K] extends Array<infer RA>
     ? IArrayQuery<Q, RA>
     : IRelationQuery<Q, Relations[K]>;
 };
 
-export type IArrayQuery<Q, A> = [
-  IRelationQuery<Q, A> & {
-    [NESTQL_PAGINATE]: {
-      [NESTQL_PAGE]: number;
-      [NESTQL_LIMIT]: number;
-    };
-  }
-];
+export type IArrayQuery<Q, A> = [IRelationQuery<Q, A> & IPaginate];
+
+export interface IPaginate {
+  [NESTQL_PAGINATE]:
+    | {
+        [NESTQL_PAGE]: number;
+        [NESTQL_LIMIT]: number;
+      }
+    | 'all';
+}
 
 export type IRelationQuery<Q, R> = R extends IDomainModel<infer Props, infer Relations>
   ? IQuery<IDomainModel<Props, Pick<Relations, IProhibitAdjacentReferencedRelations<Q, Relations>>>>
@@ -42,3 +42,5 @@ type IProhibitAdjacentReferencedRelations<Q, Relations> = {
     ? never
     : K;
 }[keyof Relations];
+
+export const createQueryModel = <T>() => <Q extends IQuery<T>>(q: Q) => q;

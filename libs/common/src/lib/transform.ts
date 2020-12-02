@@ -1,4 +1,4 @@
-import { NESTQL_ALL } from './constants';
+import { NESTQL_ALL_FIELDS, NESTQL_PAGINATE } from './constants';
 import { IParser } from './parser';
 import { IQuery } from './query';
 
@@ -11,7 +11,7 @@ export function removeExtraFields<T, Q extends IQuery<T>>(fullEntity: T | T[], q
 
   const remove = (e: T) => {
     const qKeys = Object.keys(query);
-    if (!qKeys.includes(NESTQL_ALL)) {
+    if (!qKeys.includes(NESTQL_ALL_FIELDS) && !qKeys.includes(NESTQL_PAGINATE)) {
       for (const k of Object.keys(e)) {
         if (!qKeys.includes(k)) {
           delete e[k as keyof T];

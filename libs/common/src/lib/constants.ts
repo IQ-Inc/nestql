@@ -1,5 +1,5 @@
 export const NESTQL_PAGINATE = '__paginate' as const;
-export const NESTQL_ALL = '__all' as const;
+export const NESTQL_ALL_FIELDS = '__all_fields' as const;
 export const NESTQL_QUERY = '__query' as const;
 export const NESTQL_PROPS = '__props' as const;
 export const NESTQL_PAGE = '__page' as const;

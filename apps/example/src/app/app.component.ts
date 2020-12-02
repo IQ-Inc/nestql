@@ -10,8 +10,10 @@ import { switchMap, tap } from 'rxjs/operators';
 export class AppComponent {
   hello$ = this.api.getAllJobs([
     {
-      id: true,
-      datePosted: true,
+      __all: true,
+      ownedBy: {
+        __all: true,
+      },
     },
   ]);
 

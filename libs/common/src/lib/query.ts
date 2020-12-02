@@ -2,7 +2,7 @@ import { NESTQL_ALL, NESTQL_PAGINATE } from './constants';
 import { IDomainModel } from './domain-model';
 
 export type Query<Q> = Q extends Array<infer TA>
-  ? [Query<TA>]
+  ? ArrayQuery<Q, TA>
   : Q extends IDomainModel<infer Props, infer Relations>
   ? ({ __all?: true } & {
       [K in keyof Props]?: true;

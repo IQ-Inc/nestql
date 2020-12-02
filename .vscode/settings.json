@@ -9,6 +9,7 @@
   "cSpell.words": [
     "Typeorm",
     "dtos",
+    "metatype",
     "nestjs",
     "nestql",
     "upsert"

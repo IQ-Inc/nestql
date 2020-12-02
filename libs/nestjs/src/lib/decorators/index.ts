@@ -1,3 +1,3 @@
-export * from './operation';
-export * from './resolver';
-export * from './payload';
+export * from './operation.decorator';
+export * from './resolver.decorator';
+export * from './payload.decorator';

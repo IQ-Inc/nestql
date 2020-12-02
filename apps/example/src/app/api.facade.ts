@@ -1,4 +1,4 @@
-import { IAngularCommunication, Operation } from '@nestql/angular';
+import { IAngularCommunication, OperationRequest } from '@nestql/angular';
 import { ClientOperation } from '@nestql/common';
 import {
   AddJobPostDto,
@@ -10,15 +10,15 @@ import {
 } from '@nestql/example-domain';
 
 export class ApiFacadeService implements IAngularCommunication<ExampleAppOperations> {
-  @Operation()
+  @OperationRequest()
   getJobPost!: ClientOperation<JobPost, GetJobPostDto>;
 
-  @Operation()
+  @OperationRequest()
   addJobPost!: ClientOperation<JobPost, AddJobPostDto>;
 
-  @Operation()
+  @OperationRequest()
   getUser!: ClientOperation<User, GetUserDto>;
 
-  @Operation()
+  @OperationRequest()
   getAllJobs!: ClientOperation<JobPost[]>;
 }

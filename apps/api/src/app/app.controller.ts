@@ -1,4 +1,4 @@
-import { IOperation } from '@nestql/common';
+import { Query } from '@nestql/common';
 import {
   AddJobPostDto,
   ExampleAppOperations,
@@ -7,7 +7,7 @@ import {
   JobPost,
   User,
 } from '@nestql/example-domain';
-import { INestCommunication, Operation, Payload, Resolver } from '@nestql/nestjs';
+import { INestCommunication, NestOperation, NestQuery, NestProps, Resolver } from '@nestql/nestjs';
 import * as uuid from 'uuid';
 import { JobPostRepository } from './repositories/job-post.repository';
 import { UserRepository } from './repositories/user.repository';
@@ -16,23 +16,23 @@ import { UserRepository } from './repositories/user.repository';
 export class AppController implements INestCommunication<ExampleAppOperations> {
   constructor(private readonly jobPostRepo: JobPostRepository, private readonly userRepo: UserRepository) {}
 
-  @Operation()
-  async getJobPost(@Payload() { query, props }: IOperation<JobPost, GetJobPostDto>) {
+  @NestOperation()
+  async getJobPost(@NestQuery() query: Query<JobPost>, @NestProps() props: GetJobPostDto) {
     return this.jobPostRepo.findOne(props.id, query);
   }
 
-  @Operation()
-  async addJobPost(@Payload() { query, props }: IOperation<JobPost, AddJobPostDto>) {
+  @NestOperation()
+  async addJobPost(@NestQuery() query: Query<JobPost>, @NestProps() props: AddJobPostDto) {
     return this.jobPostRepo.upsert({ ...props, id: uuid.v4() }, query);
   }
 
-  @Operation()
-  async getUser(@Payload() { query, props }: IOperation<User, GetUserDto>) {
+  @NestOperation()
+  async getUser(@NestQuery() query: Query<User>, @NestProps() props: GetUserDto) {
     return this.userRepo.findOneOrFail(props.id, query);
   }
 
-  @Operation()
-  async getAllJobs(@Payload() { query }: IOperation<JobPost[]>) {
+  @NestOperation()
+  async getAllJobs(@NestQuery() query: Query<JobPost[]>) {
     return this.jobPostRepo.findAll(query);
   }
 }

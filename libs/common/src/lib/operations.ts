@@ -11,7 +11,8 @@ export interface IOperation<T, Props = undefined> {
 export type IOperations = Record<keyof unknown, IOperation<unknown, unknown>>;
 
 export type ServerOperation<T, Props = undefined> = (
-  request: IOperation<T, Props>
+  query: Query<T>,
+  props: Props
 ) => PromiseOrObservable<Parser<T, Query<T>>>;
 
 export type ClientOperation<T, Props = undefined> = (

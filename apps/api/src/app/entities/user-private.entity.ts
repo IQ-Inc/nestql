@@ -1,4 +1,5 @@
-import { UserPrivate } from '@nestql/example-domain';
+import { IOneToOne } from '@nestql/common';
+import { User, UserPrivate } from '@nestql/example-domain';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 
@@ -8,12 +9,9 @@ export class UserPrivateEntity implements Required<UserPrivate> {
   id!: string;
 
   @Column()
-  ssn!: number;
-
-  @Column()
-  birthDate!: Date;
+  birthday!: Date;
 
   @OneToOne(() => UserEntity)
-  @JoinColumn()
-  publicData!: UserEntity;
+  @JoinColumn() // !Important to join columns on both entities.
+  publicProfile!: IOneToOne<UserPrivate, User>;
 }

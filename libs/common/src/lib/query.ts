@@ -1,44 +1,22 @@
-import { NESTQL_LIMIT, NESTQL_PAGE, NESTQL_PAGINATE } from './constants';
-import { IDomainModel } from './domain-model';
-import { IParser } from './parser';
+import { IOneToMany, IManyToOne, IOneToOne, IManyToMany } from './relations';
 
-export type IQuery<Q> = Q extends Array<infer TA>
-  ? IArrayQuery<Q, TA>
-  : Q extends IDomainModel<infer Props, infer Relations>
-  ? IPropQuery<Props> & IDiscernArrayFromObjectRelationQuery<Q, Relations>
-  : never;
+export type IQuery<Q> = Q extends Array<infer A> ? IIQuery<A> & IPaginate : IIQuery<Q>;
 
-type IPropQuery<Props> = {
-  [K in keyof Props]?: true;
+type IIQuery<T> = {
+  [K in keyof T]?: T[K] extends IOneToMany<any, any>
+    ? IQuery<T[K]>
+    : T[K] extends IManyToOne<any, any>
+    ? IQuery<T[K]>
+    : T[K] extends IOneToOne<any, any>
+    ? IQuery<T[K]>
+    : T[K] extends IManyToMany<any, any>
+    ? IQuery<T[K]>
+    : true;
 };
-
-type IDiscernArrayFromObjectRelationQuery<Q, Relations> = {
-  [K in keyof Relations]?: Relations[K] extends Array<infer RA>
-    ? IArrayQuery<Q, RA>
-    : IRelationQuery<Q, Relations[K]>;
-};
-
-export type IArrayQuery<Q, A> = [IRelationQuery<Q, A> & IPaginate];
 
 export interface IPaginate {
-  [NESTQL_PAGINATE]:
-    | {
-        [NESTQL_PAGE]: number;
-        [NESTQL_LIMIT]: number;
-      }
-    | 'all';
+  __paginate?: {
+    __page: number;
+    __limit: number;
+  };
 }
-
-export type IRelationQuery<Q, R> = R extends IDomainModel<infer Props, infer Relations>
-  ? IQuery<IDomainModel<Props, Pick<Relations, IProhibitAdjacentReferencedRelations<Q, Relations>>>>
-  : never;
-
-type IProhibitAdjacentReferencedRelations<Q, Relations> = {
-  [K in keyof Relations]: Relations[K] extends Array<infer A>
-    ? A extends Q
-      ? never
-      : K
-    : Relations[K] extends Q
-    ? never
-    : K;
-}[keyof Relations];

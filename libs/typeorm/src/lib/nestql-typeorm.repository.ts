@@ -1,12 +1,7 @@
-import {
-  createTypeormRelationsArray,
-  IDomainModel,
-  IParser,
-  IQuery,
-  removeExtraFields,
-} from '@nestql/common';
+import { IDomainModel, IParser, IQuery, removeExtraFields, NESTQL_PAGINATE, IPaginate } from '@nestql/common';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { DeepPartial, Repository, SelectQueryBuilder } from 'typeorm';
+import { createTypeormRelationsArray } from './relations.transform';
 
 /**
  * TODO
@@ -38,6 +33,52 @@ export abstract class NestQLTypeormRepository<
     const relations = createTypeormRelationsArray<Entity>(query);
     const e = await this.repo.find({ relations });
     return removeExtraFields(e, query) as IParser<Entity, Q>;
+  }
+
+  async paginate<Q extends IQuery<Entity>>(query: Q) {
+    const alias = 'alias';
+    const qb = this.repo.createQueryBuilder(alias);
+
+    const parseQuery = async (q: Q) => {
+      let entities: Pagination<Entity>;
+      const qKeys = Object.keys(q);
+
+      const doPaginate = qKeys.includes(NESTQL_PAGINATE);
+      if (doPaginate) {
+        const paginateOptions = (q as IPaginate)[NESTQL_PAGINATE];
+        if (!paginateOptions) {
+          entities = this.createPaginationMetaFromAllEntities(await this.repo.find());
+        } else {
+          entities = await paginate<any>(qb, {
+            page: paginateOptions.__page,
+            limit: paginateOptions.__limit,
+          });
+        }
+      } else {
+        entities = this.createPaginationMetaFromAllEntities(await this.repo.find());
+      }
+
+      return entities;
+    };
+
+    if (Array.isArray(query)) {
+      return parseQuery(query[0]);
+    } else {
+      return parseQuery(query);
+    }
+  }
+
+  private createPaginationMetaFromAllEntities(entities: Entity[]): Pagination<Entity> {
+    return {
+      items: entities,
+      meta: {
+        itemCount: entities.length,
+        totalItems: entities.length,
+        itemsPerPage: entities.length,
+        currentPage: 1,
+        totalPages: 1,
+      },
+    };
   }
 
   //   paginate<RK extends RKeys = never>(

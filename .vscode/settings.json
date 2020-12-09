@@ -12,6 +12,7 @@
     "metatype",
     "nestjs",
     "nestql",
+    "todos",
     "upsert"
   ],
   "typescript.tsdk": "node_modules\\typescript\\lib"

@@ -1,18 +1,11 @@
-import { DecayNever } from '@nestql/util';
-import { NESTQL_PAGINATE } from './constants';
-import { IDomainModel } from './domain-model';
-import { IArrayQuery, IRelationQuery } from './query';
+import { IPagination } from './pagination';
 
-export type IParser<CompleteType, QueriedType> = DecayNever<
-  {
-    [K in keyof CompleteType]: K extends keyof QueriedType
-      ? QueriedType[K] extends IArrayQuery<CompleteType, QueriedType>
-        ? IParser<CompleteType[K], Omit<QueriedType[K], typeof NESTQL_PAGINATE>>
-        : QueriedType[K] extends IRelationQuery<any, any>
-        ? IParser<CompleteType[K], QueriedType[K]>
-        : QueriedType[K] extends true
-        ? CompleteType[K]
-        : never
-      : never;
-  }
->;
+export type IParser<CompleteType, QueriedType> = CompleteType extends Array<infer A>
+  ? IPagination<IParser<A, QueriedType>>
+  : {
+      [K in keyof QueriedType]: K extends keyof CompleteType
+        ? CompleteType[K] extends Array<infer AA>
+          ? IPagination<IParser<AA, QueriedType[K]>>
+          : CompleteType[K]
+        : never;
+    };

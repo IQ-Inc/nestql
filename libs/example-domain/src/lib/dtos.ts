@@ -1,29 +1,37 @@
-import { IsNotEmpty, IsNotEmptyObject, IsString } from 'class-validator';
-import { JobPost, User } from './models';
+import { IManyToOne } from '@nestql/common';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { Todo, User } from './models';
 
-export abstract class GetJobPostDto {
+export abstract class GetUserDto {
   @IsNotEmpty()
   @IsString()
-  id!: string;
+  userId!: string;
 }
 
-export abstract class AddJobPostDto implements Omit<JobPost, 'id'> {
+export abstract class AddTodoDto {
+  @IsNotEmpty()
   @IsString()
   name!: string;
 
   @IsNotEmpty()
   @IsString()
-  jobTitle!: string;
+  title!: string;
 
-  @IsString()
-  datePosted!: Date;
-
-  @IsNotEmptyObject()
-  ownedBy!: User;
-}
-
-export abstract class GetUserDto {
   @IsNotEmpty()
   @IsString()
-  id!: string;
+  content!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  userId!: string;
+}
+
+export abstract class AddTagDto {
+  @IsNotEmpty()
+  @IsString()
+  todoId!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  text!: string;
 }

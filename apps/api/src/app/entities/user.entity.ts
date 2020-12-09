@@ -1,6 +1,7 @@
-import { User } from '@nestql/example-domain';
+import { IOneToMany, IOneToOne } from '@nestql/common';
+import { Todo, User, UserPrivate } from '@nestql/example-domain';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
-import { JobPostEntity } from './job-post.entity';
+import { TodoEntity } from './todo.entity';
 import { UserPrivateEntity } from './user-private.entity';
 
 @Entity({ name: 'User' })
@@ -9,18 +10,12 @@ export class UserEntity implements Required<User> {
   id!: string;
 
   @Column()
-  firstName!: string;
+  name!: string;
 
-  @Column()
-  lastName!: string;
-
-  @Column()
-  dateCreated!: Date;
+  @OneToMany(() => TodoEntity, (e) => e.ownedBy)
+  todos!: IOneToMany<User, Todo>;
 
   @OneToOne(() => UserPrivateEntity, { nullable: true })
-  @JoinColumn()
-  privateData!: UserPrivateEntity;
-
-  @OneToMany(() => JobPostEntity, (e) => e.ownedBy)
-  ownedJobs!: JobPostEntity[];
+  @JoinColumn() // !Important to join columns on both entities.
+  privateProfile!: IOneToOne<User, UserPrivate>;
 }

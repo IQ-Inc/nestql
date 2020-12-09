@@ -7,7 +7,8 @@ import { DbModule } from './db.module';
 import { UserPrivateEntity } from './entities/user-private.entity';
 import { HttpErrorFilter } from './error.filter';
 import { LogInterceptor } from './log.interceptor';
-import { JobPostRepository } from './repositories/job-post.repository';
+import { TagRepository } from './repositories/tag.repository';
+import { TodoRepository } from './repositories/todo.repository';
 import { UserRepository } from './repositories/user.repository';
 
 @Module({
@@ -30,7 +31,8 @@ import { UserRepository } from './repositories/user.repository';
   providers: [
     UserRepository,
     UserPrivateEntity,
-    JobPostRepository,
+    TodoRepository,
+    TagRepository,
     { provide: APP_INTERCEPTOR, useClass: LogInterceptor },
     { provide: APP_FILTER, useClass: HttpErrorFilter },
   ],

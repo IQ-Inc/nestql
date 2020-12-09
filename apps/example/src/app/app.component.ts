@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { createQueryModel } from '@nestql/common';
-import { JobPost } from '@nestql/example-domain';
-import { JobPostQuery } from './state/job-post.query';
-import { JobPostService } from './state/job-post.service';
+import { ApiFacadeService } from './api.facade';
 
 @Component({
   selector: 'nestql-example-app-root',
@@ -10,30 +7,24 @@ import { JobPostService } from './state/job-post.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  hello$ = this.jobPostQuery.selectAll();
+  hello$ = this.api.getUser(
+    {
+      name: true,
+      todos: {
+        title: true,
+        content: true,
+        dateCreated: true,
+        tags: {
+          text: true,
+        },
+      },
+    },
+    { userId: '1' }
+  );
 
-  constructor(private readonly jobPostService: JobPostService, private readonly jobPostQuery: JobPostQuery) {}
+  constructor(private readonly api: ApiFacadeService) {}
 
-  getJobPosts() {
-    this.jobPostService.getAllJobPosts().subscribe();
-  }
-
-  createJob() {
-    // this.api
-    //   .getUser({ __all_fields: true }, { id: '1' })
-    //   .pipe(
-    //     switchMap((user) =>
-    //       this.api.addJobPost(
-    //         { __all_fields: true },
-    //         {
-    //           name: `rand_${Math.random()}`,
-    //           datePosted: new Date(),
-    //           jobTitle: '',
-    //           ownedBy: user,
-    //         }
-    //       )
-    //     )
-    //   )
-    //   .subscribe();
-  }
+  // createJob() {
+  //   this.hello$.subscribe((s) => s.todos);
+  // }
 }

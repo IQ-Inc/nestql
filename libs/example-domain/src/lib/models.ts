@@ -1,63 +1,29 @@
-import { IDomainModel } from '@nestql/common';
+import { IManyToMany, IManyToOne, IOneToMany, IOneToOne } from '@nestql/common';
 
-/*
-  _   _
- | | | |___ ___ _ _
- | |_| (_-</ -_) '_|
-  \___//__/\___|_|
-
-*/
-
-interface IUser {
+export interface User {
   id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  todos: IOneToMany<User, Todo>;
+  privateProfile?: IOneToOne<User, UserPrivate>;
+}
+
+export interface UserPrivate {
+  id: string;
+  birthday: Date;
+  publicProfile: IOneToOne<UserPrivate, User>;
+}
+
+export interface Todo {
+  id: string;
+  title: string;
+  content: string;
   dateCreated: Date;
+  ownedBy: IManyToOne<Todo, User>;
+  tags: IManyToMany<Todo, Tag>;
 }
 
-interface IUserRelations {
-  ownedJobs: JobPost[];
-  privateData: UserPrivate;
-}
-
-export type User = IDomainModel<IUser, IUserRelations>;
-
-/*
-  _   _               ___     _          _
- | | | |___ ___ _ _  | _ \_ _(_)_ ____ _| |_ ___
- | |_| (_-</ -_) '_| |  _/ '_| \ V / _` |  _/ -_)
-  \___//__/\___|_|   |_| |_| |_|\_/\__,_|\__\___|
-
-*/
-
-interface IUserPrivate {
+export interface Tag {
   id: string;
-  ssn: number;
-  birthDate: Date;
+  text: string;
+  todos: IManyToMany<Tag, Todo>;
 }
-
-interface IUserPrivateRelations {
-  publicData: User;
-}
-
-export type UserPrivate = IDomainModel<IUserPrivate, IUserPrivateRelations>;
-
-/*
-     _     _      ___        _
-  _ | |___| |__  | _ \___ __| |_
- | || / _ \ '_ \ |  _/ _ (_-<  _|
-  \__/\___/_.__/ |_| \___/__/\__|
-
-*/
-
-interface IJobPost {
-  id: string;
-  jobTitle: string;
-  datePosted: Date;
-}
-
-interface IJobPostRelations {
-  ownedBy: User;
-}
-
-export type JobPost = IDomainModel<IJobPost, IJobPostRelations>;

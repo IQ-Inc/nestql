@@ -35,37 +35,23 @@ export abstract class NestQLTypeormRepository<
     return removeExtraFields(e, query) as IParser<Entity, Q>;
   }
 
-  async paginate<Q extends IQuery<Entity>>(query: Q) {
-    const alias = 'alias';
-    const qb = this.repo.createQueryBuilder(alias);
+  async paginate<Q extends IQuery<Entity>>(query: Q): Promise<Pagination<IParser<Entity, Q>>> {
+    let entities: Pagination<Entity>;
+    const relations = createTypeormRelationsArray<Entity>(query);
 
-    const parseQuery = async (q: Q) => {
-      let entities: Pagination<Entity>;
-      const qKeys = Object.keys(q);
-
-      const doPaginate = qKeys.includes(NESTQL_PAGINATE);
-      if (doPaginate) {
-        const paginateOptions = (q as IPaginate)[NESTQL_PAGINATE];
-        if (!paginateOptions) {
-          entities = this.createPaginationMetaFromAllEntities(await this.repo.find());
-        } else {
-          entities = await paginate<any>(qb, {
-            page: paginateOptions.__page,
-            limit: paginateOptions.__limit,
-          });
-        }
-      } else {
-        entities = this.createPaginationMetaFromAllEntities(await this.repo.find());
-      }
-
-      return entities;
-    };
-
-    if (Array.isArray(query)) {
-      return parseQuery(query[0]);
+    const paginateOptions = (query as IPaginate)[NESTQL_PAGINATE];
+    if (paginateOptions) {
+      entities = await paginate(
+        this.repo,
+        { page: paginateOptions.__page, limit: paginateOptions.__limit },
+        { relations }
+      );
     } else {
-      return parseQuery(query);
+      entities = this.createPaginationMetaFromAllEntities(await this.repo.find({ relations }));
     }
+
+    removeExtraFields(entities.items, query);
+    return entities as Pagination<IParser<Entity, Q>>;
   }
 
   private createPaginationMetaFromAllEntities(entities: Entity[]): Pagination<Entity> {

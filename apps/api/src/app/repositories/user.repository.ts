@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 
 export class UserRepository extends NestQLTypeormRepository<User> {
-  constructor(@InjectRepository(UserEntity) public readonly userRepo: Repository<User>) {
-    super(userRepo);
+  constructor(@InjectRepository(UserEntity) public readonly repo: Repository<User>) {
+    super(repo);
   }
 }

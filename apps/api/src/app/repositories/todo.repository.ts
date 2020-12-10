@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { TodoEntity } from '../entities/todo.entity';
 
 export class TodoRepository extends NestQLTypeormRepository<Todo> {
-  constructor(@InjectRepository(TodoEntity) public readonly todoRepo: Repository<Todo>) {
-    super(todoRepo);
+  constructor(@InjectRepository(TodoEntity) public readonly repo: Repository<Todo>) {
+    super(repo);
   }
 }

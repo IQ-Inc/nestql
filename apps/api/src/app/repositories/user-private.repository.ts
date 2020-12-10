@@ -5,9 +5,7 @@ import { NestQLTypeormRepository } from '@nestql/typeorm';
 import { UserPrivate } from '@nestql/example-domain';
 
 export class UserPrivateRepository extends NestQLTypeormRepository<UserPrivate> {
-  constructor(
-    @InjectRepository(UserPrivateEntity) protected readonly userPrivateRepo: Repository<UserPrivate>
-  ) {
-    super(userPrivateRepo);
+  constructor(@InjectRepository(UserPrivateEntity) protected readonly repo: Repository<UserPrivate>) {
+    super(repo);
   }
 }

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { TagEntity } from '../entities/tag.entity';
 
 export class TagRepository extends NestQLTypeormRepository<Tag> {
-  constructor(@InjectRepository(TagEntity) protected readonly tagRepo: Repository<Tag>) {
-    super(tagRepo);
+  constructor(@InjectRepository(TagEntity) protected readonly repo: Repository<Tag>) {
+    super(repo);
   }
 }

@@ -1,17 +1,16 @@
 import { IOneToMany, IManyToOne, IOneToOne, IManyToMany } from './relations';
 
-export type IQuery<Q> = Q extends Array<infer A> ? IIQuery<A> & IPaginate : IIQuery<Q>;
+export type IQuery<Q> = Q extends Array<infer A> ? IRootQuery<A> & IPaginate : IRootQuery<Q>;
+type IRootQuery<Q> = Q extends Array<infer A> ? IIQuery<A> : IIQuery<Q>;
 
-type IIQuery<T> = {
-  [K in keyof T]?: T[K] extends IOneToMany<any, any>
-    ? IQuery<T[K]>
-    : T[K] extends IManyToOne<any, any>
-    ? IQuery<T[K]>
-    : T[K] extends IOneToOne<any, any>
-    ? IQuery<T[K]>
-    : T[K] extends IManyToMany<any, any>
-    ? IQuery<T[K]>
-    : true;
+type Rel<Self, Relation> =
+  | IOneToOne<Self, Relation>
+  | IOneToMany<Self, Relation>
+  | IManyToOne<Self, Relation>
+  | IManyToMany<Self, Relation>;
+
+type IIQuery<Q> = {
+  [K in keyof Q]?: Q[K] extends Rel<Q[K], infer _> ? true : IRootQuery<Q[K]>;
 };
 
 export interface IPaginate {

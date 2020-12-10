@@ -4,6 +4,9 @@ import { AddTagDto, AddTodoDto, ExampleAppOperations, GetUserDto, Todo, User } f
 
 export class ApiFacadeService implements IClientOperations<ExampleAppOperations> {
   @ClientOperation()
+  getAllUsers!: IClientOperation<User[]>;
+
+  @ClientOperation()
   getUser!: IClientOperation<User, GetUserDto>;
 
   @ClientOperation()

@@ -15,13 +15,18 @@ export class AppController implements IServerOperations<ExampleAppOperations> {
   ) {}
 
   @ServerOperation()
+  async getAllUsers(@Query() query: IQuery<User[]>) {
+    return this.userRepo.paginate(query);
+  }
+
+  @ServerOperation()
   async getUser(@Query() query: IQuery<User>, @Props() props: GetUserDto) {
     return this.userRepo.findOneOrFail(props.userId, query);
   }
 
   @ServerOperation()
   async addTodo(@Query() query: IQuery<Todo>, @Props() props: AddTodoDto) {
-    const me = await this.userRepo.userRepo.findOneOrFail(props.userId);
+    const me = await this.userRepo.repo.findOneOrFail(props.userId);
     return this.todoRepo.upsert(
       { ...props, id: uuid.v4(), dateCreated: new Date(), ownedBy: me, tags: [] },
       query
@@ -30,7 +35,7 @@ export class AppController implements IServerOperations<ExampleAppOperations> {
 
   @ServerOperation()
   async addTag(@Query() query: IQuery<Todo>, @Props() props: AddTagDto) {
-    const todo = await this.todoRepo.todoRepo.findOneOrFail(props.todoId);
+    const todo = await this.todoRepo.repo.findOneOrFail(props.todoId);
     return this.tagRepo.upsert({ ...props, id: uuid.v4(), todos: [todo] }, query) as any;
   }
 }

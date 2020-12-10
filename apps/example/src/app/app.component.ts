@@ -7,24 +7,30 @@ import { ApiFacadeService } from './api.facade';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  hello$ = this.api.getUser(
+  readonly hello$ = this.api.getAllUsers(
     {
+      id: true,
       name: true,
       todos: {
-        title: true,
+        id: true,
         content: true,
-        dateCreated: true,
+        title: true,
         tags: {
+          id: true,
           text: true,
         },
       },
+      __paginate: {
+        __limit: 1,
+        __page: 2,
+      },
     },
-    { userId: '1' }
+    undefined
   );
 
   constructor(private readonly api: ApiFacadeService) {}
 
-  // createJob() {
-  //   this.hello$.subscribe((s) => s.todos);
-  // }
+  createJob() {
+    this.hello$.subscribe((s) => s.items[0].todos[0].tags[0]);
+  }
 }

@@ -33,5 +33,5 @@ export function removeExtraFields<T, Q extends IQuery<T>>(fullEntity: T | T[], q
     fullEntity = remove(fullEntity);
   }
 
-  return fullEntity as IParser<T, Q>;
+  return (fullEntity as unknown) as IParser<T, Q>;
 }

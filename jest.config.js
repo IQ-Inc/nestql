@@ -10,5 +10,6 @@ module.exports = {
     '<rootDir>/libs/example',
     '<rootDir>/libs/example-domain',
     '<rootDir>/libs/typeorm',
+    '<rootDir>/apps/e2e',
   ],
 };

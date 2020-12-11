@@ -1,9 +1,8 @@
-import { NESTQL_PAGINATE } from './constants';
 import { IParser } from './parser';
 import { IQuery } from './query';
 
 export function removeExtraFields<T, Q extends IQuery<T>>(fullEntity: T | T[], query: Q) {
-  if (!fullEntity || !query) return;
+  if (!fullEntity || !query) return {} as IParser<T, Q>;
 
   if (Array.isArray(query)) {
     query = query[0];

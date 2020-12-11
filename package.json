@@ -40,6 +40,7 @@
     "@nestjs/common": "^7.6.1",
     "@nestjs/core": "^7.6.1",
     "@nestjs/platform-express": "^7.6.1",
+    "@nestjs/platform-fastify": "^7.6.1",
     "@nestjs/typeorm": "^7.1.5",
     "@ngrx/effects": "10.1.0",
     "@ngrx/entity": "10.1.0",

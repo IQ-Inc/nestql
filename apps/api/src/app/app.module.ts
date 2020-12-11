@@ -11,7 +11,7 @@ import { TagRepository } from './repositories/tag.repository';
 import { TodoRepository } from './repositories/todo.repository';
 import { UserRepository } from './repositories/user.repository';
 
-@Module({
+export const APP_CONF = (isE2e: boolean) => ({
   imports: [
     NestQLNestModule.forRoot(),
     TypeOrmModule.forRoot({
@@ -20,7 +20,7 @@ import { UserRepository } from './repositories/user.repository';
       port: 5432,
       username: 'postgres',
       password: '1Qazxsw2',
-      database: 'nestql',
+      database: isE2e ? 'nestql-e2e' : 'nestql',
       synchronize: true,
       autoLoadEntities: true,
       ssl: false,
@@ -36,5 +36,7 @@ import { UserRepository } from './repositories/user.repository';
     { provide: APP_INTERCEPTOR, useClass: LogInterceptor },
     { provide: APP_FILTER, useClass: HttpErrorFilter },
   ],
-})
+});
+
+@Module(APP_CONF(false))
 export class AppModule {}

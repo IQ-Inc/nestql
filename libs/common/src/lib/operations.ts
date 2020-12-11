@@ -18,5 +18,5 @@ export type IServerOperation<T, Props = undefined> = (
 
 export type IClientOperation<T, Props = undefined> = <Q extends IQuery<T>>(
   query: Q,
-  props: Props
+  props?: Props
 ) => Observable<IParser<T, Q>>;

@@ -4,7 +4,7 @@ export interface User {
   id: string;
   name: string;
   todos: IOneToMany<User, Todo>;
-  privateProfile: IOneToOne<User, UserPrivate>;
+  privateProfile?: IOneToOne<User, UserPrivate>;
 }
 
 export interface UserPrivate {

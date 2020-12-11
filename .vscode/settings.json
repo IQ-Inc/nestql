@@ -7,6 +7,7 @@
     110
   ],
   "cSpell.words": [
+    "Fastify",
     "Typeorm",
     "dtos",
     "metatype",
@@ -15,5 +16,6 @@
     "todos",
     "upsert"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "vsicons.presets.angular": true
 }

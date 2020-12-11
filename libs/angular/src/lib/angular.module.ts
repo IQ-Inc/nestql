@@ -28,17 +28,17 @@ export class NestQLAngularModule {
   }
 }
 
-function createOperations(apiUrl: string, operation: IOperations) {
+function createOperations(apiUrl: string, operations: IOperations) {
   const http = new HttpClient(new HttpXhrBackend({ build: () => new XMLHttpRequest() }));
-  const o = (operation as any).prototype[__NESTQL_OPERATIONS];
+  const o = (operations as any).prototype[__NESTQL_OPERATIONS];
   for (const k of Object.keys(o)) {
-    const IClientOperation = (query: object, props: object) => {
+    const clientOperation = (query: object, props: object) => {
       const body: IOperation<object, object> = { [NESTQL_PROPS]: props, [NESTQL_QUERY]: query };
       return http
         .post<any>(`${apiUrl}/nestql/${k}`, body)
         .pipe(tap((r) => console.log('NestQL Response: ', r)));
     };
-    o[k] = IClientOperation;
+    o[k] = clientOperation;
   }
   return o;
 }

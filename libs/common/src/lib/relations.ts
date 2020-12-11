@@ -29,3 +29,9 @@ export type IManyToMany<Self, Relation> = {
       : K
     : K]: Relation[K];
 }[];
+
+export type IAnyRelation<Self, Relation> =
+  | IOneToOne<Self, Relation>
+  | IOneToMany<Self, Relation>
+  | IManyToOne<Self, Relation>
+  | IManyToMany<Self, Relation>;

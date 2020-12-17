@@ -1,5 +1,5 @@
-import { IOperation } from '@nestql/common';
-import { AddTagDto, AddTodoDto, GetUserDto } from './dtos';
+import { IOperation, ISubscription } from '@nestql/common';
+import { AddTagDto, AddTodoDto, GetMyTodosDto, GetUserDto } from './dtos';
 import { Todo, User } from './models';
 
 export interface ExampleTodoAppOperations {
@@ -7,4 +7,8 @@ export interface ExampleTodoAppOperations {
   getUser: IOperation<User, GetUserDto>;
   addTodo: IOperation<Todo, AddTodoDto>;
   addTag: IOperation<Todo, AddTagDto>;
+}
+
+export interface ExampleTodoAppSubscriptions {
+  subMyTodos: ISubscription<Todo[], GetMyTodosDto>;
 }

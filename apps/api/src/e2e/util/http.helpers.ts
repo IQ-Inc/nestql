@@ -1,5 +1,5 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { IOperation, IParser, NESTQL_PROPS, NESTQL_QUERY } from '@nestql/common';
+import { IOperation, IParser, NESTQL_DTO, NESTQL_QUERY } from '@nestql/common';
 import { IncomingHttpHeaders } from 'http2';
 import { Response as HttpResponse } from 'light-my-request';
 
@@ -25,7 +25,7 @@ export async function operate<O extends IOperation<any, any>>(
   name: string,
   o: O
 ) {
-  const body: IOperation<object, object> = { [NESTQL_PROPS]: o.__props, [NESTQL_QUERY]: o.__query };
+  const body: IOperation<object, object> = { [NESTQL_DTO]: o.__dto, [NESTQL_QUERY]: o.__query };
   const res = await app.inject({
     method: 'POST',
     url: `/nestql/${name}`,

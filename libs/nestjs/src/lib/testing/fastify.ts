@@ -5,7 +5,7 @@ import {
   IOperations,
   IParser,
   IQuery,
-  NESTQL_PROPS,
+  NESTQL_DTO,
   NESTQL_QUERY,
   __NESTQL_OPERATIONS,
 } from '@nestql/common';
@@ -38,7 +38,7 @@ export function createNestjsFastifyTestOperations<O extends IOperations & (new (
   const o = (operations as any).prototype[__NESTQL_OPERATIONS];
   for (const k of Object.keys(o)) {
     const testOperation = async (query: object, props: object) => {
-      const body: IOperation<object, object> = { [NESTQL_PROPS]: props, [NESTQL_QUERY]: query };
+      const body: IOperation<object, object> = { [NESTQL_DTO]: props, [NESTQL_QUERY]: query };
       const res = await app.inject({
         method: 'POST',
         url: `/nestql/${k}`,

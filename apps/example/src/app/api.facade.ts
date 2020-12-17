@@ -1,15 +1,23 @@
-import { ClientOperation, IClientOperations } from '@nestql/angular';
-import { IClientOperation } from '@nestql/common';
+import {
+  ClientOperation,
+  ClientSubscription,
+  IClientOperations,
+  IClientSubscriptions,
+} from '@nestql/angular';
+import { IClientOperation, IClientSubscription } from '@nestql/common';
 import {
   AddTagDto,
   AddTodoDto,
   ExampleTodoAppOperations,
+  ExampleTodoAppSubscriptions,
+  GetMyTodosDto,
+  GetTodo,
   GetUserDto,
   Todo,
   User,
 } from '@nestql/example-domain';
 
-export class ApiFacadeService implements IClientOperations<ExampleTodoAppOperations> {
+export class ApiOperations implements IClientOperations<ExampleTodoAppOperations> {
   @ClientOperation()
   getAllUsers!: IClientOperation<User[]>;
 
@@ -21,4 +29,12 @@ export class ApiFacadeService implements IClientOperations<ExampleTodoAppOperati
 
   @ClientOperation()
   addTag!: IClientOperation<Todo, AddTagDto>;
+}
+
+export class ApiSubscriptions implements IClientSubscriptions<ExampleTodoAppSubscriptions> {
+  @ClientSubscription()
+  subMyTodos!: IClientSubscription<Todo[], GetMyTodosDto>;
+
+  @ClientSubscription()
+  subTodo!: IClientSubscription<Todo[], GetTodo>;
 }

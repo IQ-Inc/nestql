@@ -1,7 +1,13 @@
-<div style="text-align: center">
-  <h1>Welcome to Todo Example!</h1>
-  <img width="300" src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" />
-</div>
-<!-- <button (click)="getJobPosts()">Get All Job Posts</button> -->
-<pre *ngIf="hello$">Message: {{ hello$ | async | json }}</pre>
-<!-- <button (click)="createJob()">Create Random Job</button> -->
+<form [formGroup]="addTodoForm">
+  <div style="text-align: center">
+    <h1>Welcome to Todo Example!</h1>
+    <img width="300" src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" />
+  </div>
+  <input formControlName="me" placeholder="My Id" />
+  <button (click)="loadMyTodos()">Get All My Todos</button>
+  <pre>Todos: {{ todos$ | async | json }}</pre>
+  <input formControlName="title" placeholder="Title" />
+  <input formControlName="content" placeholder="Content" />
+  <input formControlName="owner" placeholder="Owner" />
+</form>
+<button [disabled]="addTodoForm.invalid" (click)="addTodo()">Add Todo</button>

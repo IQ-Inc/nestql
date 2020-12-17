@@ -8,11 +8,19 @@ export abstract class GetUserDto {
   userId!: string;
 }
 
-export abstract class AddTodoDto {
+export abstract class GetMyTodosDto {
   @IsNotEmpty()
   @IsString()
-  name!: string;
+  userId!: string;
+}
 
+export abstract class GetTodo {
+  @IsNotEmpty()
+  @IsString()
+  todoId!: string;
+}
+
+export abstract class AddTodoDto {
   @IsNotEmpty()
   @IsString()
   title!: string;

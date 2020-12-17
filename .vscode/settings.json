@@ -14,7 +14,8 @@
     "nestjs",
     "nestql",
     "todos",
-    "upsert"
+    "upsert",
+    "websockets"
   ],
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "vsicons.presets.angular": true

@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 
-export function Resolver(): ClassDecorator {
+export function Operator(): ClassDecorator {
   return function (target: Function) {
     Controller('nestql')(target);
   };

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { NestQLNestJSModule } from '@nestql/nestjs';
+import { ExampleAppOperator } from './app.operators';
+import { ExampleAppSubscriptions } from './app.subscriptions';
 import { TagEntity } from './entities/tag.entity';
 import { TodoEntity } from './entities/todo.entity';
 import { UserPrivateEntity } from './entities/user-private.entity';
 import { UserEntity } from './entities/user.entity';
 import { HttpErrorFilter } from './error.filter';
-import { ExampleAppGateway } from './gateways/app.gateway';
 import { LogInterceptor } from './log.interceptor';
-import { ExampleAppOperator } from './operators/app.operator';
 import { TagRepository } from './repositories/tag.repository';
 import { TodoRepository } from './repositories/todo.repository';
 import { UserPrivateRepository } from './repositories/user-private.repository';
@@ -18,7 +18,7 @@ export const APP_CONF = (isE2e: boolean) => ({
   imports: [
     NestQLNestJSModule.forRoot({
       operators: [ExampleAppOperator],
-      gateways: [ExampleAppGateway],
+      subscriptions: [ExampleAppSubscriptions],
       entities: [UserEntity, UserPrivateEntity, TodoEntity, TagEntity],
       repositories: [UserRepository, UserPrivateRepository, TodoRepository, TagRepository],
       dbConfig: {

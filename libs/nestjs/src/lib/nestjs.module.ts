@@ -8,13 +8,13 @@ import { NestQLTypeormRepository } from '@nestql/typeorm';
 export class NestQLNestJSModule {
   static forRoot<Repo extends new (...args: any[]) => NestQLTypeormRepository<any, any>>({
     operators,
-    gateways,
+    subscriptions,
     entities,
     repositories,
     dbConfig,
   }: {
     operators: IOperations[];
-    gateways: ISubscriptions[];
+    subscriptions: ISubscriptions[];
     entities: EntityClassOrSchema[];
     repositories: Repo[];
     dbConfig: TypeOrmModuleOptions;
@@ -22,9 +22,9 @@ export class NestQLNestJSModule {
     return {
       module: NestQLNestJSModule,
       imports: [TypeOrmModule.forRoot(dbConfig), TypeOrmModule.forFeature(entities)],
-      providers: [...gateways, ...repositories] as any,
+      providers: [...subscriptions, ...repositories] as any,
       controllers: operators as any,
-      exports: gateways as any,
+      exports: subscriptions as any,
     };
   }
 }

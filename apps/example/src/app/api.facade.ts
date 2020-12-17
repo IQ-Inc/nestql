@@ -20,13 +20,10 @@ import {
 export class ApiOperations implements IClientOperations<ExampleTodoAppOperations> {
   @ClientOperation()
   getAllUsers!: IClientOperation<User[]>;
-
   @ClientOperation()
   getUser!: IClientOperation<User, GetUserDto>;
-
   @ClientOperation()
   addTodo!: IClientOperation<Todo, AddTodoDto>;
-
   @ClientOperation()
   addTag!: IClientOperation<Todo, AddTagDto>;
 }
@@ -34,7 +31,6 @@ export class ApiOperations implements IClientOperations<ExampleTodoAppOperations
 export class ApiSubscriptions implements IClientSubscriptions<ExampleTodoAppSubscriptions> {
   @ClientSubscription()
   subMyTodos!: IClientSubscription<Todo[], GetMyTodosDto>;
-
   @ClientSubscription()
   subTodo!: IClientSubscription<Todo[], GetTodo>;
 }

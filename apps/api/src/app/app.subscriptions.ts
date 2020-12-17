@@ -1,19 +1,12 @@
 import { OnGatewayDisconnect } from '@nestjs/websockets';
 import { IQuery } from '@nestql/common';
 import { ExampleTodoAppSubscriptions, GetMyTodosDto, Todo } from '@nestql/example-domain';
-import {
-  DtoSub,
-  Gateway,
-  IServerSubscriptions,
-  QuerySub,
-  ServerSubscription,
-  Subscriber,
-} from '@nestql/nestjs';
+import { IServerSubscriptions, ServerSubscription, ServerSubscriptions } from '@nestql/nestjs';
 import { Socket } from 'socket.io';
-import { TodoRepository } from '../repositories/todo.repository';
+import { TodoRepository } from './repositories/todo.repository';
 
-@Gateway()
-export class ExampleAppGateway
+@ServerSubscriptions()
+export class ExampleAppSubscriptions
   implements IServerSubscriptions<ExampleTodoAppSubscriptions>, OnGatewayDisconnect {
   constructor(private readonly todoRepo: TodoRepository) {}
 
@@ -22,11 +15,7 @@ export class ExampleAppGateway
   }
 
   @ServerSubscription()
-  async subMyTodos(
-    @Subscriber() subscriber: Socket,
-    @QuerySub() query: IQuery<Todo[]>,
-    @DtoSub() { userId }: GetMyTodosDto
-  ) {
+  async subMyTodos(subscriber: Socket, query: IQuery<Todo[]>, { userId }: GetMyTodosDto) {
     console.log(query, userId);
     this.todoRepo.provisionPaginationSubscription(subscriber, 'subMyTodos', query, {
       where: { ownedBy: { id: userId } },

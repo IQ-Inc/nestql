@@ -11,7 +11,7 @@ export abstract class NestQLTypeormRepository<
   Entity extends IDomainModel<{ id: IdType }, object>,
   IdType extends string | number = string
 > {
-  listeners = new Map<
+  readonly subscribers = new Map<
     string,
     {
       channel: string;
@@ -30,7 +30,7 @@ export abstract class NestQLTypeormRepository<
     options?: Omit<FindManyOptions<Entity>, 'relations'>
   ) {
     const listener = () => this.paginate(query, options);
-    this.listeners.set(socket.id, {
+    this.subscribers.set(socket.id, {
       socket,
       channel,
       listener,
@@ -39,24 +39,46 @@ export abstract class NestQLTypeormRepository<
     socket.emit(channel, await listener());
   }
 
-  removeListener(socket: Socket) {
-    this.listeners.delete(socket.id);
+  async provisionSingleEntitySubscription<Q extends IQuery<Entity>>(
+    socket: Socket,
+    channel: string,
+    id: IdType,
+    query: Q
+  ) {
+    const listener = () => this.findOneOrFail(id, query);
+    this.subscribers.set(socket.id, {
+      socket,
+      channel,
+      listener,
+      ids: [(await this.repo.findOneOrFail(id)).id],
+    });
+    socket.emit(channel, await listener());
   }
 
-  async trigger() {
-    for (const { channel, socket, listener } of this.listeners.values()) {
-      const data = await listener();
-      socket.emit(channel, data);
+  removeListener(socket: Socket) {
+    this.subscribers.delete(socket.id);
+  }
+
+  async trigger(id: IdType | IdType[]) {
+    const triggeredIds = Array.isArray(id) ? id : [id];
+
+    for (const { channel, socket, listener, ids } of this.subscribers.values()) {
+      // Only trigger subscribers who are watching Entities of ids.
+      if (triggeredIds.some((t) => ids.includes(t))) {
+        const data = await listener();
+        socket.emit(channel, data);
+        break;
+      }
     }
   }
 
-  async findOneOrFail<Q extends IQuery<Entity>>(id: string | number, query: Q) {
+  async findOneOrFail<Q extends IQuery<Entity>>(id: IdType, query: Q) {
     const relations = createTypeormRelationsArray<Entity>(query);
     const e = await this.repo.findOneOrFail(id, { relations });
     return removeExtraFields(e, query);
   }
 
-  async findOne<Q extends IQuery<Entity>>(id: string | number, query: Q) {
+  async findOne<Q extends IQuery<Entity>>(id: IdType, query: Q) {
     const relations = createTypeormRelationsArray<Entity>(query);
     const e = await this.repo.findOne(id, { relations });
     return removeExtraFields(e, query);
@@ -112,27 +134,27 @@ export abstract class NestQLTypeormRepository<
 
   async upsert<Q extends IQuery<Entity>>(entity: Entity, query: Q) {
     const res = await this.repo.save(entity);
-    this.trigger();
+    this.trigger(entity.id);
     return removeExtraFields(res, query);
   }
 
   async upsertMany<Q extends IQuery<Entity>>(entities: Entity[], query: Q) {
     if (entities.length === 0) return [];
     await this.repo.save(entities);
-    this.trigger();
+    this.trigger(entities.map((e) => e.id));
     return this.paginate(query);
   }
 
   async delete(id: IdType): Promise<IdType> {
     await this.repo.delete(id);
-    this.trigger();
+    this.trigger(id);
     return id;
   }
 
   async deleteMany(ids: IdType[]): Promise<IdType[]> {
     if (ids.length === 0) return [];
     await this.repo.delete(ids as string[]);
-    this.trigger();
+    this.trigger(ids);
     return ids;
   }
 }

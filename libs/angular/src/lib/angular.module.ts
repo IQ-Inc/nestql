@@ -6,6 +6,7 @@ import {
   IOperations,
   ISubscription,
   ISubscriptions,
+  NESTQL,
   NESTQL_DTO,
   NESTQL_QUERY,
   __NESTQL_OPERATIONS,
@@ -49,14 +50,14 @@ export class NestQLAngularModule {
 function createOperations(apiUrl: string, operations: IOperations) {
   const http = new HttpClient(new HttpXhrBackend({ build: () => new XMLHttpRequest() }));
   const ops = (operations as any).prototype[__NESTQL_OPERATIONS];
-  for (const k of Object.keys(ops)) {
+  for (const funcName of Object.keys(ops)) {
     const clientOperation = (query: object, props: object) => {
       const body: IOperation<object, object> = { [NESTQL_DTO]: props, [NESTQL_QUERY]: query };
       return http
-        .post<any>(`${apiUrl}/nestql/${k}`, body)
+        .post<any>(`${apiUrl}/${NESTQL}/${funcName}`, body)
         .pipe(tap((r) => console.log('NestQL Response: ', r)));
     };
-    ops[k] = clientOperation;
+    ops[funcName] = clientOperation;
   }
 
   return ops;
@@ -69,10 +70,10 @@ function createSubscriptions(apiUrl: string, subscriptions: ISubscriptions) {
   if (subKeys.length > 0) {
     const socket = io(apiUrl);
 
-    for (const k of subKeys) {
+    for (const funcName of subKeys) {
       const subject = new Subject<any>();
 
-      socket.on(k, (d: unknown) => {
+      socket.on(funcName, (d: unknown) => {
         subject.next(d);
       });
 
@@ -81,11 +82,11 @@ function createSubscriptions(apiUrl: string, subscriptions: ISubscriptions) {
           [NESTQL_DTO]: props,
           [NESTQL_QUERY]: query,
         };
-        socket.emit(k, body);
+        socket.emit(funcName, body);
         return subject.asObservable();
       };
 
-      subs[k] = clientSubscription;
+      subs[funcName] = clientSubscription;
     }
   }
 

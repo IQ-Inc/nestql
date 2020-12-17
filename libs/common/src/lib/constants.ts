@@ -1,3 +1,4 @@
+export const NESTQL = 'nestql' as const;
 export const NESTQL_PAGINATE = '__paginate' as const;
 export const NESTQL_ALL = 'all' as const;
 export const NESTQL_QUERY = '__query' as const;
